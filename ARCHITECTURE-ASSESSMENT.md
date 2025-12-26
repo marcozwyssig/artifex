@@ -63,10 +63,10 @@ applications/
 │   │   │   └── system-monitor/
 │   │   ├── persistence/
 │   │   └── sync/
-│   └── artifex.node-agent.ui.web/
+│   └── artifex.node-agent.web/
 │       └── api/
 └── web-ui/
-    └── artifex.web.ui.web/
+    └── artifex.web.web/
 ```
 
 **Analysis:**
@@ -154,7 +154,7 @@ device-management/
 │   │       └── cisco-nxos/
 │   └── external-services/    ✅ Third-party integrations
 │
-└── artifex.device-management.ui.web/
+└── artifex.device-management.web/
     └── api/                  ✅ REST API
         ├── controllers/
         └── middleware/
@@ -185,7 +185,7 @@ All 7 remaining services now follow the exact same structure as device-managemen
 #### ✅ **All Previous Issues Resolved:**
 
 ~~**CRITICAL ISSUE #1: Missing Ui Layer**~~ - **✅ RESOLVED**
-- ✅ Created `ui/api/` for all 7 services
+- ✅ Created `ui/cqrs/` for all 7 services
 - ✅ Added controllers/ and middleware/ subdirectories
 - Services can now expose REST APIs
 
@@ -226,7 +226,7 @@ shared/
 ├── artifex.shared.application/    (ready for implementation)
 ├── artifex.shared.infrastructure/
 │   └── IEventBus.cs               ✅
-└── artifex.shared.ui.web/   (ready for implementation)
+└── artifex.shared.web/   (ready for implementation)
 ```
 
 ### 4.2 Analysis
@@ -454,7 +454,7 @@ All 8 services now follow this standard template:
 │   │   └── roles/            # Ansible roles
 │   └── external-services/    # Third-party integrations
 │
-└── artifex.{service}.ui.web/
+└── artifex.{service}.web/
     └── api/
         ├── controllers/      # REST API controllers
         └── middleware/       # API middleware

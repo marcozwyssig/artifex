@@ -17,23 +17,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "node-agent", "node-agent", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.shared.domain", "src\shared\artifex.shared.domain\artifex.shared.domain.csproj", "{11111111-1111-1111-1111-111111111111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.shared.api", "src\shared\artifex.shared.api\artifex.shared.api.csproj", "{22222222-2222-2222-2222-222222222222}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.shared.cqrs", "src\shared\artifex.shared.cqrs\artifex.shared.cqrs.csproj", "{22222222-2222-2222-2222-222222222222}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.shared.infrastructure", "src\shared\artifex.shared.infrastructure\artifex.shared.infrastructure.csproj", "{33333333-3333-3333-3333-333333333333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.shared.ui.web", "src\shared\artifex.shared.ui.web\artifex.shared.ui.web.csproj", "{44444444-4444-4444-4444-444444444444}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.shared.web", "src\shared\artifex.shared.web\artifex.shared.web.csproj", "{44444444-4444-4444-4444-444444444444}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.domain", "src\services\device-management\artifex.device-management.domain\artifex.device-management.domain.csproj", "{51111111-1111-1111-1111-111111111111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.api", "src\services\device-management\artifex.device-management.api\artifex.device-management.api.csproj", "{52222222-2222-2222-2222-222222222222}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.cqrs", "src\services\device-management\artifex.device-management.cqrs\artifex.device-management.cqrs.csproj", "{52222222-2222-2222-2222-222222222222}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.orchestration", "src\services\device-management\artifex.device-management.orchestration\artifex.device-management.orchestration.csproj", "{55555555-5555-5555-5555-555555555555}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.infrastructure", "src\services\device-management\artifex.device-management.infrastructure\artifex.device-management.infrastructure.csproj", "{53333333-3333-3333-3333-333333333333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.ui.web", "src\services\device-management\artifex.device-management.ui.web\api\artifex.device-management.ui.web.csproj", "{54444444-4444-4444-4444-444444444444}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.device-management.web", "src\services\device-management\artifex.device-management.web\cqrs\artifex.device-management.web.csproj", "{54444444-4444-4444-4444-444444444444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.node-agent.ui.web", "src\applications\node-agent\artifex.node-agent.ui.web\artifex.node-agent.ui.web.csproj", "{C8AF008D-D26A-4D10-BE36-562A47F87106}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artifex.node-agent.web", "src\applications\node-agent\artifex.node-agent.web\artifex.node-agent.web.csproj", "{C8AF008D-D26A-4D10-BE36-562A47F87106}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

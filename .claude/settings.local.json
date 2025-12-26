@@ -19,7 +19,7 @@
       "Bash(else)",
       "Bash(done)",
       "Bash(for service in device-management topology-management overlay-network monitoring identity node-management event-store configuration-management)",
-      "Bash(if [ -d \"src/services/$service/artifex.$service.ui.web\" ])",
+      "Bash(if [ -d \"src/services/$service/artifex.$service.web\" ])",
       "Bash(while read f)",
       "Bash(do echo \"=== $f ===\" head -5 \"$f\")",
       "Bash(for file in src/shared/artifex.shared.domain/*.cs)",

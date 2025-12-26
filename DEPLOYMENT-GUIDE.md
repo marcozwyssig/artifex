@@ -51,7 +51,7 @@ Artifex is a distributed network management system with:
 
 #### Configuration
 
-Edit `src/services/device-management/artifex.device-management.ui.web/api/appsettings.json`:
+Edit `src/services/device-management/artifex.device-management.web/cqrs/appsettings.json`:
 
 ```json
 {
@@ -79,7 +79,7 @@ dotnet ef database update
 #### Run the Service
 
 ```bash
-cd src/services/device-management/artifex.device-management.ui.web/api
+cd src/services/device-management/artifex.device-management.web/api
 dotnet run
 ```
 
@@ -91,7 +91,7 @@ API Documentation: `http://localhost:5001/swagger`
 
 #### Configuration
 
-Edit `src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json`:
+Edit `src/applications/node-agent/artifex.node-agent.web/cqrs/appsettings.json`:
 
 ```json
 {
@@ -130,7 +130,7 @@ Edit `src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json
 #### Run the Agent
 
 ```bash
-cd src/applications/node-agent/artifex.node-agent.ui.web/api
+cd src/applications/node-agent/artifex.node-agent.web/api
 dotnet run
 ```
 
@@ -206,7 +206,7 @@ Node agents will automatically discover devices based on configured schedules.
 **Monitor Discovery:**
 ```bash
 # Check node agent logs
-curl http://localhost:5002/api/discovery/segments
+curl http://localhost:5002/cqrs/discovery/segments
 
 # View last discovery results
 tail -f /var/log/artifex/node-agent.log
@@ -216,7 +216,7 @@ tail -f /var/log/artifex/node-agent.log
 
 **Discover All Segments:**
 ```bash
-curl -X POST http://localhost:5002/api/discovery/discover-all
+curl -X POST http://localhost:5002/cqrs/discovery/discover-all
 ```
 
 Response:
@@ -239,14 +239,14 @@ Response:
 
 **Discover Specific Segment:**
 ```bash
-curl -X POST http://localhost:5002/api/discovery/discover-segment \
+curl -X POST http://localhost:5002/cqrs/discovery/discover-segment \
   -H "Content-Type: application/json" \
   -d '{"segmentName": "HQ LAN"}'
 ```
 
 **Identify Single Device:**
 ```bash
-curl http://localhost:5002/api/discovery/identify/192.168.1.100
+curl http://localhost:5002/cqrs/discovery/identify/192.168.1.100
 ```
 
 Response:
@@ -266,19 +266,19 @@ Response:
 
 ```bash
 # Get all devices
-curl http://localhost:5001/api/devices
+curl http://localhost:5001/cqrs/devices
 
 # Get specific device
-curl http://localhost:5001/api/devices/{deviceId}
+curl http://localhost:5001/cqrs/devices/{deviceId}
 
 # Filter by status
-curl "http://localhost:5001/api/devices?status=Online&pageSize=50"
+curl "http://localhost:5001/cqrs/devices?status=Online&pageSize=50"
 ```
 
 ### 4. Update Device Status
 
 ```bash
-curl -X PATCH http://localhost:5001/api/devices/{deviceId}/status \
+curl -X PATCH http://localhost:5001/cqrs/devices/{deviceId}/status \
   -H "Content-Type: application/json" \
   -d '{
     "status": "Maintenance",
@@ -472,8 +472,8 @@ pg_dump artifex_device_management > backup_$(date +%Y%m%d).sql
 
 ```bash
 tar -czf artifex_config_$(date +%Y%m%d).tar.gz \
-  src/services/device-management/artifex.device-management.ui.web/api/appsettings.json \
-  src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json
+  src/services/device-management/artifex.device-management.web/cqrs/appsettings.json \
+  src/applications/node-agent/artifex.node-agent.web/cqrs/appsettings.json
 ```
 
 ## Next Steps

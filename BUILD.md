@@ -127,19 +127,19 @@ Artifex/
 │   │   ├── artifex.shared.domain/
 │   │   ├── artifex.shared.application/
 │   │   ├── artifex.shared.infrastructure/
-│   │   └── artifex.shared.ui.web/
+│   │   └── artifex.shared.web/
 │   ├── services/               # Microservices
 │   │   └── device-management/
 │   │       ├── artifex.device-management.domain/
 │   │       ├── artifex.device-management.application/
 │   │       ├── artifex.device-management.infrastructure/
-│   │       └── artifex.device-management.ui.web/
+│   │       └── artifex.device-management.web/
 │   └── applications/           # Standalone applications
 │       └── node-agent/
 │           ├── artifex.node-agent.domain/
 │           ├── artifex.node-agent.application/
 │           ├── artifex.node-agent.infrastructure/
-│           └── artifex.node-agent.ui.web/
+│           └── artifex.node-agent.web/
 └── scripts/
     └── init-db.sql             # Database initialization
 ```
@@ -163,12 +163,12 @@ docker-compose up -d
 dotnet build Artifex.sln -c Release
 
 # Publish Device Management service
-dotnet publish src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj \
+dotnet publish src/services/device-management/artifex.device-management.web/cqrs/artifex.device-management.web.csproj \
   -c Release \
   -o ./publish/device-management
 
 # Publish Node Agent
-dotnet publish src/applications/node-agent/artifex.node-agent.ui.web/api/artifex.node-agent.ui.web.csproj \
+dotnet publish src/applications/node-agent/artifex.node-agent.web/cqrs/artifex.node-agent.web.csproj \
   -c Release \
   -o ./publish/node-agent
 ```
@@ -177,7 +177,7 @@ dotnet publish src/applications/node-agent/artifex.node-agent.ui.web/api/artifex
 
 ### Device Management Service
 
-Configuration file: `src/services/device-management/artifex.device-management.ui.web/api/appsettings.json`
+Configuration file: `src/services/device-management/artifex.device-management.web/cqrs/appsettings.json`
 
 Key settings:
 - `ConnectionStrings:DeviceManagementDb` - Database connection
@@ -186,7 +186,7 @@ Key settings:
 
 ### Node Agent
 
-Configuration file: `src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json`
+Configuration file: `src/applications/node-agent/artifex.node-agent.web/cqrs/appsettings.json`
 
 Key settings:
 - `NodeAgent:NodeId` - Unique agent identifier
@@ -198,22 +198,22 @@ Key settings:
 
 ### Device Management Service (Port 5001)
 
-- `POST /api/discovery/discover` - Trigger device discovery
-- `GET /api/discovery/identify/{ipAddress}` - Identify single device
-- `GET /api/devices` - List all devices
-- `GET /api/devices/{id}` - Get device by ID
-- `POST /api/devices` - Register new device
-- `PUT /api/devices/{id}` - Update device
-- `DELETE /api/devices/{id}` - Delete device
+- `POST /cqrs/discovery/discover` - Trigger device discovery
+- `GET /cqrs/discovery/identify/{ipAddress}` - Identify single device
+- `GET /cqrs/devices` - List all devices
+- `GET /cqrs/devices/{id}` - Get device by ID
+- `POST /cqrs/devices` - Register new device
+- `PUT /cqrs/devices/{id}` - Update device
+- `DELETE /cqrs/devices/{id}` - Delete device
 
 Swagger UI: http://localhost:5001/swagger
 
 ### Node Agent (Port 5003)
 
-- `POST /api/discovery/discover-all` - Discover all configured segments
-- `POST /api/discovery/discover-segment` - Discover specific segment
-- `GET /api/discovery/identify/{ipAddress}` - Identify device
-- `GET /api/discovery/segments` - List configured segments
+- `POST /cqrs/discovery/discover-all` - Discover all configured segments
+- `POST /cqrs/discovery/discover-segment` - Discover specific segment
+- `GET /cqrs/discovery/identify/{ipAddress}` - Identify device
+- `GET /cqrs/discovery/segments` - List configured segments
 
 Swagger UI: http://localhost:5003/swagger
 
@@ -227,13 +227,13 @@ Create migration:
 ```bash
 dotnet ef migrations add MigrationName \
   --project src/services/device-management/artifex.device-management.infrastructure/artifex.device-management.infrastructure.csproj \
-  --startup-project src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj
+  --startup-project src/services/device-management/artifex.device-management.web/cqrs/artifex.device-management.web.csproj
 ```
 
 Apply migrations:
 ```bash
 dotnet ef database update \
-  --project src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj
+  --project src/services/device-management/artifex.device-management.web/cqrs/artifex.device-management.web.csproj
 ```
 
 ### Using Docker PostgreSQL

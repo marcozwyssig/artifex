@@ -281,7 +281,7 @@ grep -r "IEventBus\|Infrastructure\.EventBus" src/
 ### Run Test
 
 ```bash
-cd src/services/device-management/artifex.device-management.ui.web/api
+cd src/services/device-management/artifex.device-management.web/api
 dotnet run --environment Development
 ```
 

@@ -40,12 +40,12 @@ src/applications/  (✅ NEW)
 │   │   ├── communication/
 │   │   ├── sync/
 │   │   └── persistence/
-│   ├── artifex.node-agent.ui.web/
+│   ├── artifex.node-agent.web/
 │   │   └── api/
 │   ├── artifex.node-agent.network-monitor/
 │   └── artifex.node-agent.system-monitor/
 └── web-ui/
-    └── artifex.web.ui.web/
+    └── artifex.web.web/
 ```
 
 **What Changed:**
@@ -58,7 +58,7 @@ src/applications/  (✅ NEW)
 
 **For All Services:**
 - ✅ Moved `artifex.{service}.ansible/*` → `artifex.{service}.infrastructure/automation/`
-- ✅ Removed empty `artifex.{service}.api/` directories (now in ui layer)
+- ✅ Removed empty `artifex.{service}.cqrs/` directories (now in ui layer)
 - ✅ Device Management: Moved `device-adapter` → `infrastructure/communication/python-adapter/`
 
 **Services Updated:**
@@ -109,7 +109,7 @@ src/
 │   │   │   ├── database/                 # ✅ NEW: Moved into infrastructure
 │   │   │   │   └── migrations/
 │   │   │   └── external-services/
-│   │   └── artifex.device-management.ui.web/
+│   │   └── artifex.device-management.web/
 │   │       └── api/
 │   │           ├── controllers/
 │   │           └── middleware/
@@ -126,7 +126,7 @@ src/
     ├── artifex.shared.domain/
     ├── artifex.shared.application/
     ├── artifex.shared.infrastructure/
-    └── artifex.shared.ui.web/
+    └── artifex.shared.web/
 ```
 
 ## 📊 Progress Summary

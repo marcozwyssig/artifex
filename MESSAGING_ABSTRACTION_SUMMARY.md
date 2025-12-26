@@ -125,7 +125,7 @@ private readonly IPublishEndpoint _publishEndpoint;  // ❌ Coupled to MassTrans
 private readonly IMessageBus _messageBus;  // ✅ Depends on abstraction
 ```
 
-**File**: `artifex.device-management.api/commands/devices/RegisterDeviceCommandHandler.cs`
+**File**: `artifex.device-management.cqrs/commands/devices/RegisterDeviceCommandHandler.cs`
 
 ---
 
@@ -363,7 +363,7 @@ src/shared/artifex.shared.infrastructure/messaging/
 └── MassTransitExtensions.cs                    ← Legacy (deprecated)
 
 src/services/device-management/
-├── artifex.device-management.api/
+├── artifex.device-management.cqrs/
 │   └── commands/devices/RegisterDeviceCommandHandler.cs  ← Uses IMessageBus
 └── artifex.device-management.infrastructure/
     └── messaging/consumers/

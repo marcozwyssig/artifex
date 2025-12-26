@@ -17,7 +17,7 @@ Structure:
     - persistence/
     - communication/  (SNMP, SSH, HTTP, Python adapters)
     - automation/     (Ansible)
-  - artifex.{service}.ui.web/
+  - artifex.{service}.web/
     - api/
   - artifex.{service}.database/
 """
@@ -36,7 +36,7 @@ PROJECT_ROOT = Path(__file__).parent
 SRC_DIR = PROJECT_ROOT / "src"
 SERVICES_DIR = SRC_DIR / "services"
 SHARED_DIR = SRC_DIR / "shared"
-WEB_DIR = SRC_DIR / "web" / "artifex.web.ui.web"
+WEB_DIR = SRC_DIR / "web" / "artifex.web.web"
 DOCKER_COMPOSE_FILE = PROJECT_ROOT / "docker-compose.yml"
 
 # ============================================================================
@@ -85,14 +85,14 @@ def build(c):
 def build_device_management(c):
     """Build Device Management service"""
     print_info("Building Device Management service...")
-    c.run("dotnet build src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj -c Release")
+    c.run("dotnet build src/services/device-management/artifex.device-management.web/cqrs/artifex.device-management.web.csproj -c Release")
     print_success("Device Management service built")
 
 @task
 def build_node_agent(c):
     """Build Node Agent application"""
     print_info("Building Node Agent...")
-    c.run("dotnet build src/applications/node-agent/artifex.node-agent.ui.web/api/artifex.node-agent.ui.web.csproj -c Release")
+    c.run("dotnet build src/applications/node-agent/artifex.node-agent.web/cqrs/artifex.node-agent.web.csproj -c Release")
     print_success("Node Agent built")
 
 @task(pre=[restore])
@@ -134,7 +134,7 @@ def db_migration_create(c, name, service="device-management"):
     """Create a new database migration"""
     print_info(f"Creating migration '{name}' for {service}...")
     project_path = f"src/services/{service}/artifex.{service}.infrastructure/artifex.{service}.infrastructure.csproj"
-    startup_project = f"src/services/{service}/artifex.{service}.ui.web/api/artifex.{service}.ui.web.csproj"
+    startup_project = f"src/services/{service}/artifex.{service}.web/cqrs/artifex.{service}.web.csproj"
     c.run(f"dotnet ef migrations add {name} --project {project_path} --startup-project {startup_project}")
     print_success(f"Migration '{name}' created")
 
@@ -142,7 +142,7 @@ def db_migration_create(c, name, service="device-management"):
 def db_migration_apply(c, service="device-management"):
     """Apply database migrations"""
     print_info(f"Applying migrations for {service}...")
-    startup_project = f"src/services/{service}/artifex.{service}.ui.web/api/artifex.{service}.ui.web.csproj"
+    startup_project = f"src/services/{service}/artifex.{service}.web/cqrs/artifex.{service}.web.csproj"
     c.run(f"dotnet ef database update --project {startup_project}")
     print_success("Migrations applied")
 
@@ -150,7 +150,7 @@ def db_migration_apply(c, service="device-management"):
 def db_migration_rollback(c, migration_name, service="device-management"):
     """Rollback to a specific migration"""
     print_info(f"Rolling back to migration '{migration_name}' for {service}...")
-    startup_project = f"src/services/{service}/artifex.{service}.ui.web/api/artifex.{service}.ui.web.csproj"
+    startup_project = f"src/services/{service}/artifex.{service}.web/cqrs/artifex.{service}.web.csproj"
     c.run(f"dotnet ef database update {migration_name} --project {startup_project}")
     print_success(f"Rolled back to migration '{migration_name}'")
 
@@ -214,13 +214,13 @@ def docker_clean(c):
 def run_device_management(c):
     """Run Device Management service locally"""
     print_info("Running Device Management service...")
-    c.run("dotnet run --project src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj")
+    c.run("dotnet run --project src/services/device-management/artifex.device-management.web/cqrs/artifex.device-management.web.csproj")
 
 @task
 def run_node_agent(c):
     """Run Node Agent locally"""
     print_info("Running Node Agent...")
-    c.run("dotnet run --project src/applications/node-agent/artifex.node-agent.ui.web/artifex.node-agent.ui.web.csproj")
+    c.run("dotnet run --project src/applications/node-agent/artifex.node-agent.web/artifex.node-agent.web.csproj")
 
 # ============================================================================
 # Development Tasks
@@ -269,8 +269,8 @@ def create_structure(c):
         "src/shared/artifex.shared.infrastructure/event-bus",
         "src/shared/artifex.shared.infrastructure/persistence",
         "src/shared/artifex.shared.infrastructure/communication",
-        "src/shared/artifex.shared.ui.web/api",
-        "src/shared/artifex.shared.ui.web/web",
+        "src/shared/artifex.shared.web/cqrs",
+        "src/shared/artifex.shared.web/web",
 
         # ============================================
         # DEVICE MANAGEMENT SERVICE
@@ -305,8 +305,8 @@ def create_structure(c):
         "src/services/device-management/artifex.device-management.infrastructure/external-services",
 
         # Ui Layer
-        "src/services/device-management/artifex.device-management.ui.web/api/controllers",
-        "src/services/device-management/artifex.device-management.ui.web/api/middleware",
+        "src/services/device-management/artifex.device-management.web/cqrs/controllers",
+        "src/services/device-management/artifex.device-management.web/cqrs/middleware",
 
         # Database
         "src/services/device-management/artifex.device-management.database/migrations",
@@ -326,7 +326,7 @@ def create_structure(c):
         "src/services/topology-management/artifex.topology-management.infrastructure/communication/cdp",
         "src/services/topology-management/artifex.topology-management.infrastructure/communication/python-worker/src",
 
-        "src/services/topology-management/artifex.topology-management.ui.web/api/controllers",
+        "src/services/topology-management/artifex.topology-management.web/cqrs/controllers",
 
         "src/services/topology-management/artifex.topology-management.database/migrations",
 
@@ -347,7 +347,7 @@ def create_structure(c):
         "src/services/overlay-network/artifex.overlay-network.infrastructure/automation/roles/vxlan",
         "src/services/overlay-network/artifex.overlay-network.infrastructure/automation/roles/vrf",
 
-        "src/services/overlay-network/artifex.overlay-network.ui.web/api/controllers",
+        "src/services/overlay-network/artifex.overlay-network.web/cqrs/controllers",
 
         "src/services/overlay-network/artifex.overlay-network.database/migrations",
 
@@ -365,7 +365,7 @@ def create_structure(c):
         "src/services/monitoring/artifex.monitoring.infrastructure/communication/system-metrics",
         "src/services/monitoring/artifex.monitoring.infrastructure/communication/python-collector/src",
 
-        "src/services/monitoring/artifex.monitoring.ui.web/api/controllers",
+        "src/services/monitoring/artifex.monitoring.web/cqrs/controllers",
 
         "src/services/monitoring/artifex.monitoring.database/migrations",
 
@@ -379,18 +379,18 @@ def create_structure(c):
         "src/node-agent/artifex.node-agent.application",
         "src/node-agent/artifex.node-agent.infrastructure/communication",
         "src/node-agent/artifex.node-agent.infrastructure/sync",
-        "src/node-agent/artifex.node-agent.ui.web/api",
+        "src/node-agent/artifex.node-agent.web/cqrs",
 
         # ============================================
         # WEB UI
         # ============================================
-        "src/web/artifex.web.ui.web/src/features/devices",
-        "src/web/artifex.web.ui.web/src/features/topology",
-        "src/web/artifex.web.ui.web/src/features/overlays",
-        "src/web/artifex.web.ui.web/src/features/monitoring",
-        "src/web/artifex.web.ui.web/src/shared/components",
-        "src/web/artifex.web.ui.web/src/shared/services",
-        "src/web/artifex.web.ui.web/public",
+        "src/web/artifex.web.web/src/features/devices",
+        "src/web/artifex.web.web/src/features/topology",
+        "src/web/artifex.web.web/src/features/overlays",
+        "src/web/artifex.web.web/src/features/monitoring",
+        "src/web/artifex.web.web/src/shared/components",
+        "src/web/artifex.web.web/src/shared/services",
+        "src/web/artifex.web.web/public",
 
         # Tests
         "tests/unit",

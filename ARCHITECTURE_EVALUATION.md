@@ -249,7 +249,7 @@ spec:
    - Automatic load balancing
    ```csharp
    // Before
-   var response = await _httpClient.GetAsync("http://device-mgmt:5000/api/devices");
+   var response = await _httpClient.GetAsync("http://device-mgmt:5000/cqrs/devices");
 
    // After
    var response = await _daprClient.InvokeMethodAsync<DeviceDto>(

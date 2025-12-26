@@ -60,7 +60,7 @@ device-management/
 │   └── repositories/
 │       └── IDeviceRepository.cs               # Data access interface
 │
-├── artifex.device-management.api/             # API LAYER
+├── artifex.device-management.cqrs/             # API LAYER
 │   ├── commands/
 │   │   ├── devices/
 │   │   │   ├── RegisterDeviceCommand.cs
@@ -103,7 +103,7 @@ device-management/
 shared/
 ├── artifex.shared.domain/          # Base classes for all domains
 ├── artifex.shared.application/     # CQRS base classes
-├── artifex.shared.api/             # API-specific shared code
+├── artifex.shared.cqrs/             # API-specific shared code
 └── artifex.shared.orchestration/   # Orchestration-specific shared code
 ```
 
@@ -211,7 +211,7 @@ artifex.device-management.domain
          ▲
          ├─────────────────────┬─────────────────────┐
          │                     │                     │
-artifex.shared.api    artifex.shared.orchestration   │
+artifex.shared.cqrs    artifex.shared.orchestration   │
          ▲                     ▲                     │
          │                     │                     │
 artifex.device-        artifex.device-               │
@@ -236,7 +236,7 @@ management.api         management.orchestration      │
 ```
 Single Process:
 ├── Ui (Web API)
-├── artifex.device-management.api
+├── artifex.device-management.cqrs
 ├── artifex.device-management.orchestration
 ├── Infrastructure
 └── Domain

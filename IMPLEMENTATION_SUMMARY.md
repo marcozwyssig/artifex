@@ -37,8 +37,8 @@ src/services/device-management/artifex.device-management.infrastructure/messagin
 
 **Files Modified**:
 ```
-src/services/device-management/artifex.device-management.ui.web/api/Program.cs
-src/services/device-management/artifex.device-management.api/commands/devices/RegisterDeviceCommandHandler.cs
+src/services/device-management/artifex.device-management.web/cqrs/Program.cs
+src/services/device-management/artifex.device-management.cqrs/commands/devices/RegisterDeviceCommandHandler.cs
 ```
 
 ### Before (Custom Event Bus)
@@ -93,7 +93,7 @@ await _publishEndpoint.Publish(@event, cancellationToken);
 
 **Files Modified**:
 ```
-src/services/device-management/artifex.device-management.ui.web/api/Program.cs
+src/services/device-management/artifex.device-management.web/cqrs/Program.cs
 ```
 
 ### Implementation
@@ -144,7 +144,7 @@ builder.Services.AddHttpClient<IYourClient, YourClient>()
 
 **Files Modified**:
 ```
-src/services/device-management/artifex.device-management.ui.web/api/Program.cs
+src/services/device-management/artifex.device-management.web/cqrs/Program.cs
 docker-compose.yml
 ```
 

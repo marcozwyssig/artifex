@@ -1,4 +1,4 @@
-using Artifex.Shared.Api.DTOs;
+using Artifex.Shared.Cqrs.DTOs;
 using Xunit;
 
 namespace Artifex.Shared.Application.Tests;

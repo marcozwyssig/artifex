@@ -338,11 +338,11 @@ src/
 │       │       ├── DeviceRegisteredConsumer.cs             ← Dual interface
 │       │       └── DeviceStatusChangedConsumer.cs          ← Dual interface
 │       │
-│       ├── artifex.device-management.api/
+│       ├── artifex.device-management.cqrs/
 │       │   └── commands/devices/
 │       │       └── RegisterDeviceCommandHandler.cs         ← Uses IMessageBus
 │       │
-│       └── artifex.device-management.ui.web/api/
+│       └── artifex.device-management.web/cqrs/
 │           ├── Program.cs                                  ← Updated DI config
 │           ├── appsettings.Development.json                ← UseInMemory: true
 │           └── appsettings.Production.json                 ← UseInMemory: false
@@ -463,7 +463,7 @@ Documentation/
 docker-compose up -d postgres
 
 # 2. Run service (InMemory messaging)
-cd src/services/device-management/artifex.device-management.ui.web/api
+cd src/services/device-management/artifex.device-management.web/api
 dotnet run --environment Development
 
 # ✅ No RabbitMQ needed!
