@@ -1,0 +1,5 @@
+# Build automation dependencies
+invoke==2.2.0
+
+# Optional: Additional utilities
+colorama==0.4.6  # Better color support on Windows

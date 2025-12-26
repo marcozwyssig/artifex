@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(invoke create-structure)",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(if [ -d \"src/web\" ])",
+      "Bash(then mv src/web src/applications/web-ui)",
+      "Bash(else echo \"web directory not found\")",
+      "Bash(fi)",
+      "Bash(for service in device-management topology-management overlay-network monitoring configuration-management)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(if [ -d \"src/services/$service/maestro.$service.infrastructure\" ])",
+      "Bash(then)",
+      "Bash(else)",
+      "Bash(done)",
+      "Bash(for service in device-management topology-management overlay-network monitoring identity node-management event-store configuration-management)",
+      "Bash(if [ -d \"src/services/$service/maestro.$service.presentation\" ])",
+      "Bash(while read f)",
+      "Bash(do echo \"=== $f ===\" head -5 \"$f\")",
+      "Bash(for file in src/shared/maestro.shared.domain/*.cs)",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(for service in device-management topology-management overlay-network monitoring identity node-management configuration-management event-store)",
+      "Bash(do echo '=== $service ===' tree -L 2 src/services/$service/maestro.$service.infrastructure/ -I \"node_modules|bin|obj|__pycache__|*.pyc\")",
+      "Bash(for service in identity node-management configuration-management event-store)",
+      "Bash(__NEW_LINE__ for service in device-management topology-management overlay-network monitoring identity node-management configuration-management event-store)",
+      "Bash(if [ -d \"src/services/$service/maestro.$service.database\" ])",
+      "Bash(__NEW_LINE__ echo \"\")",
+      "Bash(ls:*)",
+      "Bash(while read file)",
+      "Bash(do if [ -f $file ])",
+      "Bash(then echo '✅ $file' fi done echo echo '=== Documentation Count ===' ls -1 *.md)",
+      "Bash(grep:*)",
+      "Bash(for dir in /Users/marcozwyssig/Documents/Maestro/src/shared/maestro.shared.*)",
+      "Bash(xargs:*)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}
