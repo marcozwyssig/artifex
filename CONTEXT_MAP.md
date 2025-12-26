@@ -1,4 +1,4 @@
-# Maestro - Domain-Driven Design Context Map
+# Artifex - Domain-Driven Design Context Map
 
 **Version**: 1.0
 **Date**: 2025-12-22
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document defines the bounded contexts in the Maestro network management system and describes their relationships using DDD Context Mapping patterns.
+This document defines the bounded contexts in the Artifex network management system and describes their relationships using DDD Context Mapping patterns.
 
 ---
 
@@ -31,7 +31,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Device credential storage
 
 **Team**: Core platform team
-**Database**: `maestro_device_management`
+**Database**: `artifex_device_management`
 **Events Published**:
 - `DeviceRegisteredEvent`
 - `DeviceDiscoveredEvent`
@@ -56,7 +56,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Visualize network structure
 
 **Team**: Topology team
-**Database**: `maestro_topology_management`
+**Database**: `artifex_topology_management`
 **Events Published**:
 - `LinkDiscoveredEvent`
 - `TopologyChangedEvent`
@@ -80,7 +80,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Monitor overlay health
 
 **Team**: SDN team
-**Database**: `maestro_overlay_network`
+**Database**: `artifex_overlay_network`
 **Events Published**:
 - `OverlayCreatedEvent`
 - `TunnelEstablishedEvent`
@@ -104,7 +104,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Store time-series data
 
 **Team**: Observability team
-**Database**: `maestro_monitoring`
+**Database**: `artifex_monitoring`
 **Events Published**:
 - `MetricCollectedEvent`
 - `AlertTriggeredEvent`
@@ -129,7 +129,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Compliance checking
 
 **Team**: Configuration team
-**Database**: `maestro_configuration_management`
+**Database**: `artifex_configuration_management`
 **Events Published**:
 - `ConfigurationChangedEvent`
 - `ComplianceViolationEvent`
@@ -153,7 +153,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Audit logging for access
 
 **Team**: Security team
-**Database**: `maestro_identity`
+**Database**: `artifex_identity`
 **Events Published**:
 - `UserAuthenticatedEvent`
 - `AccessDeniedEvent`
@@ -176,7 +176,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Provide audit trail
 
 **Team**: Platform team
-**Database**: `maestro_event_store`
+**Database**: `artifex_event_store`
 
 ---
 
@@ -195,7 +195,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Sync local findings to central
 
 **Team**: Platform team
-**Database**: `maestro_node_management`
+**Database**: `artifex_node_management`
 **Events Published**:
 - `NodeRegisteredEvent`
 - `NodeHeartbeatEvent`
@@ -301,7 +301,7 @@ This document defines the bounded contexts in the Maestro network management sys
 - Shared libraries for device-related value objects
 - Close collaboration required
 
-**Shared Code**: `maestro.shared.domain`
+**Shared Code**: `artifex.shared.domain`
 
 ---
 
@@ -392,7 +392,7 @@ External World          ACL Boundary           Domain
 - Domain never depends on external SNMP library directly
 - ACL protects domain from external changes
 
-**Location**: `maestro.device-management.infrastructure/communication/acl`
+**Location**: `artifex.device-management.infrastructure/communication/acl`
 
 ---
 
@@ -400,7 +400,7 @@ External World          ACL Boundary           Domain
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Maestro Context Map                           │
+│                    Artifex Context Map                           │
 └─────────────────────────────────────────────────────────────────┘
 
                     ┌──────────────────┐
@@ -458,7 +458,7 @@ External:
 
 ## Integration Patterns Summary
 
-| Pattern | Description | Example in Maestro |
+| Pattern | Description | Example in Artifex |
 |---------|-------------|--------------------|
 | **Shared Kernel** | Shared code/models between contexts | Device Mgmt ↔ Overlay Network |
 | **Customer/Supplier** | Upstream serves downstream | Device Mgmt → Topology |

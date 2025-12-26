@@ -1,4 +1,4 @@
-# Maestro Architecture Implementation Summary
+# Artifex Architecture Implementation Summary
 
 **Date**: 2025-12-22
 **Status**: ✅ All Recommendations Implemented
@@ -30,15 +30,15 @@ All architectural recommendations from the evaluation have been successfully imp
 
 **Files Created**:
 ```
-src/shared/maestro.shared.infrastructure/messaging/MassTransitExtensions.cs
-src/services/device-management/maestro.device-management.infrastructure/messaging/consumers/DeviceRegisteredConsumer.cs
-src/services/device-management/maestro.device-management.infrastructure/messaging/consumers/DeviceStatusChangedConsumer.cs
+src/shared/artifex.shared.infrastructure/messaging/MassTransitExtensions.cs
+src/services/device-management/artifex.device-management.infrastructure/messaging/consumers/DeviceRegisteredConsumer.cs
+src/services/device-management/artifex.device-management.infrastructure/messaging/consumers/DeviceStatusChangedConsumer.cs
 ```
 
 **Files Modified**:
 ```
-src/services/device-management/maestro.device-management.presentation/api/Program.cs
-src/services/device-management/maestro.device-management.api/commands/devices/RegisterDeviceCommandHandler.cs
+src/services/device-management/artifex.device-management.ui.web/api/Program.cs
+src/services/device-management/artifex.device-management.api/commands/devices/RegisterDeviceCommandHandler.cs
 ```
 
 ### Before (Custom Event Bus)
@@ -75,8 +75,8 @@ await _publishEndpoint.Publish(@event, cancellationToken);
   "RabbitMQ": {
     "Host": "rabbitmq",
     "Port": 5672,
-    "Username": "maestro",
-    "Password": "maestro_dev_password",
+    "Username": "artifex",
+    "Password": "artifex_dev_password",
     "VirtualHost": "/"
   }
 }
@@ -93,7 +93,7 @@ await _publishEndpoint.Publish(@event, cancellationToken);
 
 **Files Modified**:
 ```
-src/services/device-management/maestro.device-management.presentation/api/Program.cs
+src/services/device-management/artifex.device-management.ui.web/api/Program.cs
 ```
 
 ### Implementation
@@ -144,7 +144,7 @@ builder.Services.AddHttpClient<IYourClient, YourClient>()
 
 **Files Modified**:
 ```
-src/services/device-management/maestro.device-management.presentation/api/Program.cs
+src/services/device-management/artifex.device-management.ui.web/api/Program.cs
 docker-compose.yml
 ```
 
@@ -183,7 +183,7 @@ await consulClient.Agent.ServiceRegister(registration);
 ```yaml
 consul:
   image: consul:latest
-  container_name: maestro-consul
+  container_name: artifex-consul
   command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
   ports:
     - "8500:8500"   # HTTP API and UI
@@ -219,19 +219,19 @@ var servicePort = services.Response.First().Service.Port;
 
 **Files Created**:
 ```
-src/shared/maestro.shared.domain/specifications/ISpecification.cs
-src/shared/maestro.shared.domain/specifications/Specification.cs
-src/services/device-management/maestro.device-management.domain/specifications/DeviceByStatusSpecification.cs
-src/services/device-management/maestro.device-management.domain/specifications/DeviceByTypeSpecification.cs
-src/services/device-management/maestro.device-management.domain/specifications/DeviceByVendorSpecification.cs
-src/services/device-management/maestro.device-management.domain/specifications/DeviceByNetworkSegmentSpecification.cs
-src/services/device-management/maestro.device-management.domain/specifications/OnlineDevicesSpecification.cs
+src/shared/artifex.shared.domain/specifications/ISpecification.cs
+src/shared/artifex.shared.domain/specifications/Specification.cs
+src/services/device-management/artifex.device-management.domain/specifications/DeviceByStatusSpecification.cs
+src/services/device-management/artifex.device-management.domain/specifications/DeviceByTypeSpecification.cs
+src/services/device-management/artifex.device-management.domain/specifications/DeviceByVendorSpecification.cs
+src/services/device-management/artifex.device-management.domain/specifications/DeviceByNetworkSegmentSpecification.cs
+src/services/device-management/artifex.device-management.domain/specifications/OnlineDevicesSpecification.cs
 ```
 
 **Files Modified**:
 ```
-src/shared/maestro.shared.domain/IRepository.cs
-src/shared/maestro.shared.infrastructure/persistence/BaseRepository.cs
+src/shared/artifex.shared.domain/IRepository.cs
+src/shared/artifex.shared.infrastructure/persistence/BaseRepository.cs
 ```
 
 ### Usage Example
@@ -271,7 +271,7 @@ var result = await _deviceRepository.FindAsync(complexSpec, cancellationToken);
 
 **Files Created**:
 ```
-src/services/device-management/maestro.device-management.domain/factories/DeviceFactory.cs
+src/services/device-management/artifex.device-management.domain/factories/DeviceFactory.cs
 ```
 
 ### Usage Example
@@ -328,8 +328,8 @@ var deviceResult = _deviceFactory.CreateFromDiscovery(
 
 **Files Created**:
 ```
-src/services/device-management/maestro.device-management.infrastructure/communication/acl/ISnmpAdapter.cs
-src/services/device-management/maestro.device-management.infrastructure/communication/acl/SnmpAdapter.cs
+src/services/device-management/artifex.device-management.infrastructure/communication/acl/ISnmpAdapter.cs
+src/services/device-management/artifex.device-management.infrastructure/communication/acl/SnmpAdapter.cs
 ```
 
 ### Architecture
@@ -421,13 +421,13 @@ CONTEXT_MAP.md
 ```json
 {
   "ConnectionStrings": {
-    "DeviceManagementDb": "Host=localhost;Database=maestro_device_management;Username=maestro;Password=maestro_dev_password"
+    "DeviceManagementDb": "Host=localhost;Database=artifex_device_management;Username=artifex;Password=artifex_dev_password"
   },
   "RabbitMQ": {
     "Host": "rabbitmq",
     "Port": 5672,
-    "Username": "maestro",
-    "Password": "maestro_dev_password",
+    "Username": "artifex",
+    "Password": "artifex_dev_password",
     "VirtualHost": "/"
   },
   "Consul": {
@@ -458,8 +458,8 @@ device-management:
     # MassTransit RabbitMQ
     - RabbitMQ__Host=rabbitmq
     - RabbitMQ__Port=5672
-    - RabbitMQ__Username=maestro
-    - RabbitMQ__Password=maestro_dev_password
+    - RabbitMQ__Username=artifex
+    - RabbitMQ__Password=artifex_dev_password
 
     # Consul
     - Consul__Enabled=true
@@ -523,7 +523,7 @@ docker-compose logs -f device-management
 curl http://localhost:8500/v1/health/service/device-management
 
 # Verify RabbitMQ
-# Open browser: http://localhost:15672 (maestro/maestro_dev_password)
+# Open browser: http://localhost:15672 (artifex/artifex_dev_password)
 ```
 
 ### Testing Specifications
@@ -602,7 +602,7 @@ public void CreateFromManualRegistration_ValidData_ReturnsDevice()
 
 ### RabbitMQ Management UI
 - **URL**: http://localhost:15672
-- **Credentials**: maestro / maestro_dev_password
+- **Credentials**: artifex / artifex_dev_password
 - **Features**: Queue monitoring, message rates, consumer status
 
 ### Health Endpoints

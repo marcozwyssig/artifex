@@ -17,7 +17,7 @@ Clean separation into **API** and **Orchestration** layers that communicate thro
              │ depends on               │ depends on
              ▼                          ▼
 ┌────────────────────────┐   ┌──────────────────────────────┐
-│  maestro.device-       │   │  maestro.device-             │
+│  artifex.device-       │   │  artifex.device-             │
 │  management.api        │   │  management.orchestration    │
 │                        │   │                              │
 │  UI/External Interface │   │  Background Orchestration    │
@@ -43,7 +43,7 @@ Clean separation into **API** and **Orchestration** layers that communicate thro
 ```
 device-management/
 │
-├── maestro.device-management.domain/          # DOMAIN (Core Contract)
+├── artifex.device-management.domain/          # DOMAIN (Core Contract)
 │   ├── aggregates/
 │   │   └── Device.cs                          # Device aggregate root
 │   ├── entities/
@@ -60,7 +60,7 @@ device-management/
 │   └── repositories/
 │       └── IDeviceRepository.cs               # Data access interface
 │
-├── maestro.device-management.api/             # API LAYER
+├── artifex.device-management.api/             # API LAYER
 │   ├── commands/
 │   │   ├── devices/
 │   │   │   ├── RegisterDeviceCommand.cs
@@ -82,7 +82,7 @@ device-management/
 │   └── controllers/
 │       └── DiscoveryController.cs
 │
-└── maestro.device-management.orchestration/   # ORCHESTRATION LAYER
+└── artifex.device-management.orchestration/   # ORCHESTRATION LAYER
     ├── discovery/
     │   ├── NetworkDiscoveryWorker.cs          # Autonomous discovery
     │   └── TopologyDiscoveryWorker.cs         # LLDP/CDP discovery
@@ -101,10 +101,10 @@ device-management/
 
 ```
 shared/
-├── maestro.shared.domain/          # Base classes for all domains
-├── maestro.shared.application/     # CQRS base classes
-├── maestro.shared.api/             # API-specific shared code
-└── maestro.shared.orchestration/   # Orchestration-specific shared code
+├── artifex.shared.domain/          # Base classes for all domains
+├── artifex.shared.application/     # CQRS base classes
+├── artifex.shared.api/             # API-specific shared code
+└── artifex.shared.orchestration/   # Orchestration-specific shared code
 ```
 
 ## Communication Patterns
@@ -204,22 +204,22 @@ services.AddScoped<ISharedApplicationService, ...>(); // NO!
 ## Dependency Graph
 
 ```
-maestro.shared.domain
+artifex.shared.domain
          ▲
          │
-maestro.device-management.domain
+artifex.device-management.domain
          ▲
          ├─────────────────────┬─────────────────────┐
          │                     │                     │
-maestro.shared.api    maestro.shared.orchestration   │
+artifex.shared.api    artifex.shared.orchestration   │
          ▲                     ▲                     │
          │                     │                     │
-maestro.device-        maestro.device-               │
+artifex.device-        artifex.device-               │
 management.api         management.orchestration      │
          │                     │                     │
          └─────────────────────┴─────────────────────┘
                               │
-                   maestro.device-management.
+                   artifex.device-management.
                    infrastructure
 ```
 
@@ -235,9 +235,9 @@ management.api         management.orchestration      │
 
 ```
 Single Process:
-├── Presentation (Web API)
-├── maestro.device-management.api
-├── maestro.device-management.orchestration
+├── Ui (Web API)
+├── artifex.device-management.api
+├── artifex.device-management.orchestration
 ├── Infrastructure
 └── Domain
 ```
@@ -246,7 +246,7 @@ Single Process:
 
 ```
 API Server:                    Orchestration Server:
-├── Presentation               ├── orchestration
+├── Ui               ├── orchestration
 ├── api                        ├── Infrastructure
 ├── Infrastructure             └── Domain
 └── Domain

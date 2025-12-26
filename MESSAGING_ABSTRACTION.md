@@ -102,8 +102,8 @@ public interface IMessageConsumer<in TMessage>
   "RabbitMQ": {
     "Host": "rabbitmq",
     "Port": 5672,
-    "Username": "maestro",
-    "Password": "maestro_dev_password",
+    "Username": "artifex",
+    "Password": "artifex_dev_password",
     "VirtualHost": "/"
   }
 }
@@ -230,9 +230,9 @@ builder.Services.AddMessaging(builder.Configuration, messaging =>
   "RabbitMQ": {
     "Host": "rabbitmq-cluster.production.internal",
     "Port": 5672,
-    "Username": "maestro_prod",
+    "Username": "artifex_prod",
     "Password": "${RABBITMQ_PASSWORD}",
-    "VirtualHost": "/maestro"
+    "VirtualHost": "/artifex"
   }
 }
 ```
@@ -468,7 +468,7 @@ var handler = new RegisterDeviceCommandHandler(repo, uow, mockMessageBus.Object)
 ## File Locations
 
 ```
-src/shared/maestro.shared.infrastructure/messaging/
+src/shared/artifex.shared.infrastructure/messaging/
 ├── IMessageBus.cs                              # Abstraction interface
 ├── IMessageConsumer.cs                         # Consumer interface
 ├── MassTransitMessageBus.cs                    # MassTransit implementation

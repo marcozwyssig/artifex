@@ -1,25 +1,25 @@
 """
-Maestro Network Management System - Build Automation (UPDATED ARCHITECTURE)
+Artifex Network Management System - Build Automation (UPDATED ARCHITECTURE)
 ===========================================================================
 
 Proper Layered Architecture:
 - Domain: Pure business logic
 - Application: Use cases, jobs, API coordination
 - Infrastructure: Database, Communication (SNMP/SSH), Automation (Ansible)
-- Presentation: API controllers, UI
+- Ui: API controllers, UI
 
 Structure:
 - src/shared/ (renamed from building-blocks)
 - src/services/{service}/
-  - maestro.{service}.domain/
-  - maestro.{service}.application/
-  - maestro.{service}.infrastructure/
+  - artifex.{service}.domain/
+  - artifex.{service}.application/
+  - artifex.{service}.infrastructure/
     - persistence/
     - communication/  (SNMP, SSH, HTTP, Python adapters)
     - automation/     (Ansible)
-  - maestro.{service}.presentation/
+  - artifex.{service}.ui.web/
     - api/
-  - maestro.{service}.database/
+  - artifex.{service}.database/
 """
 
 from invoke import task, Collection
@@ -36,7 +36,7 @@ PROJECT_ROOT = Path(__file__).parent
 SRC_DIR = PROJECT_ROOT / "src"
 SERVICES_DIR = SRC_DIR / "services"
 SHARED_DIR = SRC_DIR / "shared"
-WEB_DIR = SRC_DIR / "web" / "maestro.web.ui"
+WEB_DIR = SRC_DIR / "web" / "artifex.web.ui.web"
 DOCKER_COMPOSE_FILE = PROJECT_ROOT / "docker-compose.yml"
 
 # ============================================================================
@@ -63,7 +63,7 @@ def print_info(message):
 def clean(c):
     """Clean build artifacts"""
     print_info("Cleaning build artifacts...")
-    c.run("dotnet clean Maestro.sln", warn=True)
+    c.run("dotnet clean Artifex.sln", warn=True)
     c.run("find . -type d -name 'bin' -o -name 'obj' | xargs rm -rf", warn=True)
     print_success("Build artifacts cleaned")
 
@@ -71,28 +71,28 @@ def clean(c):
 def restore(c):
     """Restore NuGet packages"""
     print_info("Restoring NuGet packages...")
-    c.run("dotnet restore Maestro.sln")
+    c.run("dotnet restore Artifex.sln")
     print_success("NuGet packages restored")
 
 @task
 def build(c):
     """Build the entire solution"""
-    print_info("Building Maestro solution...")
-    c.run("dotnet build Maestro.sln -c Release")
+    print_info("Building Artifex solution...")
+    c.run("dotnet build Artifex.sln -c Release")
     print_success("Solution built successfully")
 
 @task
 def build_device_management(c):
     """Build Device Management service"""
     print_info("Building Device Management service...")
-    c.run("dotnet build src/services/device-management/maestro.device-management.presentation/api/maestro.device-management.presentation.csproj -c Release")
+    c.run("dotnet build src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj -c Release")
     print_success("Device Management service built")
 
 @task
 def build_node_agent(c):
     """Build Node Agent application"""
     print_info("Building Node Agent...")
-    c.run("dotnet build src/applications/node-agent/maestro.node-agent.presentation/api/maestro.node-agent.presentation.csproj -c Release")
+    c.run("dotnet build src/applications/node-agent/artifex.node-agent.ui.web/api/artifex.node-agent.ui.web.csproj -c Release")
     print_success("Node Agent built")
 
 @task(pre=[restore])
@@ -108,7 +108,7 @@ def build_all(c):
 def test(c):
     """Run all tests"""
     print_info("Running tests...")
-    c.run("dotnet test Maestro.sln --no-build -c Release")
+    c.run("dotnet test Artifex.sln --no-build -c Release")
     print_success("Tests completed")
 
 @task
@@ -133,8 +133,8 @@ def test_integration(c):
 def db_migration_create(c, name, service="device-management"):
     """Create a new database migration"""
     print_info(f"Creating migration '{name}' for {service}...")
-    project_path = f"src/services/{service}/maestro.{service}.infrastructure/maestro.{service}.infrastructure.csproj"
-    startup_project = f"src/services/{service}/maestro.{service}.presentation/api/maestro.{service}.presentation.csproj"
+    project_path = f"src/services/{service}/artifex.{service}.infrastructure/artifex.{service}.infrastructure.csproj"
+    startup_project = f"src/services/{service}/artifex.{service}.ui.web/api/artifex.{service}.ui.web.csproj"
     c.run(f"dotnet ef migrations add {name} --project {project_path} --startup-project {startup_project}")
     print_success(f"Migration '{name}' created")
 
@@ -142,7 +142,7 @@ def db_migration_create(c, name, service="device-management"):
 def db_migration_apply(c, service="device-management"):
     """Apply database migrations"""
     print_info(f"Applying migrations for {service}...")
-    startup_project = f"src/services/{service}/maestro.{service}.presentation/api/maestro.{service}.presentation.csproj"
+    startup_project = f"src/services/{service}/artifex.{service}.ui.web/api/artifex.{service}.ui.web.csproj"
     c.run(f"dotnet ef database update --project {startup_project}")
     print_success("Migrations applied")
 
@@ -150,7 +150,7 @@ def db_migration_apply(c, service="device-management"):
 def db_migration_rollback(c, migration_name, service="device-management"):
     """Rollback to a specific migration"""
     print_info(f"Rolling back to migration '{migration_name}' for {service}...")
-    startup_project = f"src/services/{service}/maestro.{service}.presentation/api/maestro.{service}.presentation.csproj"
+    startup_project = f"src/services/{service}/artifex.{service}.ui.web/api/artifex.{service}.ui.web.csproj"
     c.run(f"dotnet ef database update {migration_name} --project {startup_project}")
     print_success(f"Rolled back to migration '{migration_name}'")
 
@@ -214,13 +214,13 @@ def docker_clean(c):
 def run_device_management(c):
     """Run Device Management service locally"""
     print_info("Running Device Management service...")
-    c.run("dotnet run --project src/services/device-management/maestro.device-management.presentation/api/maestro.device-management.presentation.csproj")
+    c.run("dotnet run --project src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj")
 
 @task
 def run_node_agent(c):
     """Run Node Agent locally"""
     print_info("Running Node Agent...")
-    c.run("dotnet run --project src/applications/node-agent/maestro.node-agent.presentation/maestro.node-agent.presentation.csproj")
+    c.run("dotnet run --project src/applications/node-agent/artifex.node-agent.ui.web/artifex.node-agent.ui.web.csproj")
 
 # ============================================================================
 # Development Tasks
@@ -242,14 +242,14 @@ def dev_setup(c):
 def format(c):
     """Format code using dotnet format"""
     print_info("Formatting code...")
-    c.run("dotnet format Maestro.sln")
+    c.run("dotnet format Artifex.sln")
     print_success("Code formatted")
 
 @task
 def lint(c):
     """Lint code (check formatting)"""
     print_info("Linting code...")
-    c.run("dotnet format Maestro.sln --verify-no-changes")
+    c.run("dotnet format Artifex.sln --verify-no-changes")
     print_success("Code lint passed")
 
 # ============================================================================
@@ -264,110 +264,110 @@ def create_structure(c):
         # ============================================
         # SHARED (Cross-cutting concerns)
         # ============================================
-        "src/shared/maestro.shared.domain",
-        "src/shared/maestro.shared.application",
-        "src/shared/maestro.shared.infrastructure/event-bus",
-        "src/shared/maestro.shared.infrastructure/persistence",
-        "src/shared/maestro.shared.infrastructure/communication",
-        "src/shared/maestro.shared.presentation/api",
-        "src/shared/maestro.shared.presentation/web",
+        "src/shared/artifex.shared.domain",
+        "src/shared/artifex.shared.application",
+        "src/shared/artifex.shared.infrastructure/event-bus",
+        "src/shared/artifex.shared.infrastructure/persistence",
+        "src/shared/artifex.shared.infrastructure/communication",
+        "src/shared/artifex.shared.ui.web/api",
+        "src/shared/artifex.shared.ui.web/web",
 
         # ============================================
         # DEVICE MANAGEMENT SERVICE
         # ============================================
         # Domain Layer
-        "src/services/device-management/maestro.device-management.domain/aggregates",
-        "src/services/device-management/maestro.device-management.domain/entities",
-        "src/services/device-management/maestro.device-management.domain/value-objects",
-        "src/services/device-management/maestro.device-management.domain/events",
-        "src/services/device-management/maestro.device-management.domain/interfaces",
-        "src/services/device-management/maestro.device-management.domain/services",
+        "src/services/device-management/artifex.device-management.domain/aggregates",
+        "src/services/device-management/artifex.device-management.domain/entities",
+        "src/services/device-management/artifex.device-management.domain/value-objects",
+        "src/services/device-management/artifex.device-management.domain/events",
+        "src/services/device-management/artifex.device-management.domain/interfaces",
+        "src/services/device-management/artifex.device-management.domain/services",
 
         # Application Layer
-        "src/services/device-management/maestro.device-management.application/commands",
-        "src/services/device-management/maestro.device-management.application/queries",
-        "src/services/device-management/maestro.device-management.application/jobs",
-        "src/services/device-management/maestro.device-management.application/dtos",
-        "src/services/device-management/maestro.device-management.application/services",
+        "src/services/device-management/artifex.device-management.application/commands",
+        "src/services/device-management/artifex.device-management.application/queries",
+        "src/services/device-management/artifex.device-management.application/jobs",
+        "src/services/device-management/artifex.device-management.application/dtos",
+        "src/services/device-management/artifex.device-management.application/services",
 
         # Infrastructure Layer
-        "src/services/device-management/maestro.device-management.infrastructure/persistence/repositories",
-        "src/services/device-management/maestro.device-management.infrastructure/persistence/configurations",
-        "src/services/device-management/maestro.device-management.infrastructure/communication/snmp",
-        "src/services/device-management/maestro.device-management.infrastructure/communication/ssh",
-        "src/services/device-management/maestro.device-management.infrastructure/communication/http",
-        "src/services/device-management/maestro.device-management.infrastructure/communication/python-adapter/src",
-        "src/services/device-management/maestro.device-management.infrastructure/communication/python-adapter/tests",
-        "src/services/device-management/maestro.device-management.infrastructure/automation/playbooks",
-        "src/services/device-management/maestro.device-management.infrastructure/automation/roles/cisco-ios-xe",
-        "src/services/device-management/maestro.device-management.infrastructure/automation/roles/cisco-nxos",
-        "src/services/device-management/maestro.device-management.infrastructure/automation/roles/cisco-ios-xr",
-        "src/services/device-management/maestro.device-management.infrastructure/external-services",
+        "src/services/device-management/artifex.device-management.infrastructure/persistence/repositories",
+        "src/services/device-management/artifex.device-management.infrastructure/persistence/configurations",
+        "src/services/device-management/artifex.device-management.infrastructure/communication/snmp",
+        "src/services/device-management/artifex.device-management.infrastructure/communication/ssh",
+        "src/services/device-management/artifex.device-management.infrastructure/communication/http",
+        "src/services/device-management/artifex.device-management.infrastructure/communication/python-adapter/src",
+        "src/services/device-management/artifex.device-management.infrastructure/communication/python-adapter/tests",
+        "src/services/device-management/artifex.device-management.infrastructure/automation/playbooks",
+        "src/services/device-management/artifex.device-management.infrastructure/automation/roles/cisco-ios-xe",
+        "src/services/device-management/artifex.device-management.infrastructure/automation/roles/cisco-nxos",
+        "src/services/device-management/artifex.device-management.infrastructure/automation/roles/cisco-ios-xr",
+        "src/services/device-management/artifex.device-management.infrastructure/external-services",
 
-        # Presentation Layer
-        "src/services/device-management/maestro.device-management.presentation/api/controllers",
-        "src/services/device-management/maestro.device-management.presentation/api/middleware",
+        # Ui Layer
+        "src/services/device-management/artifex.device-management.ui.web/api/controllers",
+        "src/services/device-management/artifex.device-management.ui.web/api/middleware",
 
         # Database
-        "src/services/device-management/maestro.device-management.database/migrations",
+        "src/services/device-management/artifex.device-management.database/migrations",
 
         # ============================================
         # TOPOLOGY MANAGEMENT SERVICE
         # ============================================
-        "src/services/topology-management/maestro.topology-management.domain/aggregates",
-        "src/services/topology-management/maestro.topology-management.domain/value-objects",
-        "src/services/topology-management/maestro.topology-management.domain/events",
+        "src/services/topology-management/artifex.topology-management.domain/aggregates",
+        "src/services/topology-management/artifex.topology-management.domain/value-objects",
+        "src/services/topology-management/artifex.topology-management.domain/events",
 
-        "src/services/topology-management/maestro.topology-management.application/commands",
-        "src/services/topology-management/maestro.topology-management.application/queries",
+        "src/services/topology-management/artifex.topology-management.application/commands",
+        "src/services/topology-management/artifex.topology-management.application/queries",
 
-        "src/services/topology-management/maestro.topology-management.infrastructure/persistence",
-        "src/services/topology-management/maestro.topology-management.infrastructure/communication/lldp",
-        "src/services/topology-management/maestro.topology-management.infrastructure/communication/cdp",
-        "src/services/topology-management/maestro.topology-management.infrastructure/communication/python-worker/src",
+        "src/services/topology-management/artifex.topology-management.infrastructure/persistence",
+        "src/services/topology-management/artifex.topology-management.infrastructure/communication/lldp",
+        "src/services/topology-management/artifex.topology-management.infrastructure/communication/cdp",
+        "src/services/topology-management/artifex.topology-management.infrastructure/communication/python-worker/src",
 
-        "src/services/topology-management/maestro.topology-management.presentation/api/controllers",
+        "src/services/topology-management/artifex.topology-management.ui.web/api/controllers",
 
-        "src/services/topology-management/maestro.topology-management.database/migrations",
+        "src/services/topology-management/artifex.topology-management.database/migrations",
 
         # ============================================
         # OVERLAY NETWORK SERVICE
         # ============================================
-        "src/services/overlay-network/maestro.overlay-network.domain/aggregates",
-        "src/services/overlay-network/maestro.overlay-network.domain/value-objects",
-        "src/services/overlay-network/maestro.overlay-network.domain/events",
+        "src/services/overlay-network/artifex.overlay-network.domain/aggregates",
+        "src/services/overlay-network/artifex.overlay-network.domain/value-objects",
+        "src/services/overlay-network/artifex.overlay-network.domain/events",
 
-        "src/services/overlay-network/maestro.overlay-network.application/commands",
-        "src/services/overlay-network/maestro.overlay-network.application/queries",
-        "src/services/overlay-network/maestro.overlay-network.application/services",
+        "src/services/overlay-network/artifex.overlay-network.application/commands",
+        "src/services/overlay-network/artifex.overlay-network.application/queries",
+        "src/services/overlay-network/artifex.overlay-network.application/services",
 
-        "src/services/overlay-network/maestro.overlay-network.infrastructure/persistence",
-        "src/services/overlay-network/maestro.overlay-network.infrastructure/communication/tunnel-management",
-        "src/services/overlay-network/maestro.overlay-network.infrastructure/automation/playbooks",
-        "src/services/overlay-network/maestro.overlay-network.infrastructure/automation/roles/vxlan",
-        "src/services/overlay-network/maestro.overlay-network.infrastructure/automation/roles/vrf",
+        "src/services/overlay-network/artifex.overlay-network.infrastructure/persistence",
+        "src/services/overlay-network/artifex.overlay-network.infrastructure/communication/tunnel-management",
+        "src/services/overlay-network/artifex.overlay-network.infrastructure/automation/playbooks",
+        "src/services/overlay-network/artifex.overlay-network.infrastructure/automation/roles/vxlan",
+        "src/services/overlay-network/artifex.overlay-network.infrastructure/automation/roles/vrf",
 
-        "src/services/overlay-network/maestro.overlay-network.presentation/api/controllers",
+        "src/services/overlay-network/artifex.overlay-network.ui.web/api/controllers",
 
-        "src/services/overlay-network/maestro.overlay-network.database/migrations",
+        "src/services/overlay-network/artifex.overlay-network.database/migrations",
 
         # ============================================
         # MONITORING SERVICE
         # ============================================
-        "src/services/monitoring/maestro.monitoring.domain/aggregates",
-        "src/services/monitoring/maestro.monitoring.domain/value-objects",
+        "src/services/monitoring/artifex.monitoring.domain/aggregates",
+        "src/services/monitoring/artifex.monitoring.domain/value-objects",
 
-        "src/services/monitoring/maestro.monitoring.application/commands",
-        "src/services/monitoring/maestro.monitoring.application/queries",
+        "src/services/monitoring/artifex.monitoring.application/commands",
+        "src/services/monitoring/artifex.monitoring.application/queries",
 
-        "src/services/monitoring/maestro.monitoring.infrastructure/persistence/timescale",
-        "src/services/monitoring/maestro.monitoring.infrastructure/communication/snmp-collector",
-        "src/services/monitoring/maestro.monitoring.infrastructure/communication/system-metrics",
-        "src/services/monitoring/maestro.monitoring.infrastructure/communication/python-collector/src",
+        "src/services/monitoring/artifex.monitoring.infrastructure/persistence/timescale",
+        "src/services/monitoring/artifex.monitoring.infrastructure/communication/snmp-collector",
+        "src/services/monitoring/artifex.monitoring.infrastructure/communication/system-metrics",
+        "src/services/monitoring/artifex.monitoring.infrastructure/communication/python-collector/src",
 
-        "src/services/monitoring/maestro.monitoring.presentation/api/controllers",
+        "src/services/monitoring/artifex.monitoring.ui.web/api/controllers",
 
-        "src/services/monitoring/maestro.monitoring.database/migrations",
+        "src/services/monitoring/artifex.monitoring.database/migrations",
 
         # Add other services similarly...
         # Identity, NodeManagement, ConfigurationManagement, EventStore
@@ -375,22 +375,22 @@ def create_structure(c):
         # ============================================
         # NODE AGENT
         # ============================================
-        "src/node-agent/maestro.node-agent.domain",
-        "src/node-agent/maestro.node-agent.application",
-        "src/node-agent/maestro.node-agent.infrastructure/communication",
-        "src/node-agent/maestro.node-agent.infrastructure/sync",
-        "src/node-agent/maestro.node-agent.presentation/api",
+        "src/node-agent/artifex.node-agent.domain",
+        "src/node-agent/artifex.node-agent.application",
+        "src/node-agent/artifex.node-agent.infrastructure/communication",
+        "src/node-agent/artifex.node-agent.infrastructure/sync",
+        "src/node-agent/artifex.node-agent.ui.web/api",
 
         # ============================================
         # WEB UI
         # ============================================
-        "src/web/maestro.web.ui/src/features/devices",
-        "src/web/maestro.web.ui/src/features/topology",
-        "src/web/maestro.web.ui/src/features/overlays",
-        "src/web/maestro.web.ui/src/features/monitoring",
-        "src/web/maestro.web.ui/src/shared/components",
-        "src/web/maestro.web.ui/src/shared/services",
-        "src/web/maestro.web.ui/public",
+        "src/web/artifex.web.ui.web/src/features/devices",
+        "src/web/artifex.web.ui.web/src/features/topology",
+        "src/web/artifex.web.ui.web/src/features/overlays",
+        "src/web/artifex.web.ui.web/src/features/monitoring",
+        "src/web/artifex.web.ui.web/src/shared/components",
+        "src/web/artifex.web.ui.web/src/shared/services",
+        "src/web/artifex.web.ui.web/public",
 
         # Tests
         "tests/unit",

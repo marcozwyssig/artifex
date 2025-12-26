@@ -4,20 +4,20 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: maestro-postgres
+    container_name: artifex-postgres
     environment:
-      POSTGRES_USER: maestro
-      POSTGRES_PASSWORD: maestro_dev_password
-      POSTGRES_DB: maestro
+      POSTGRES_USER: artifex
+      POSTGRES_PASSWORD: artifex_dev_password
+      POSTGRES_DB: artifex
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
-      - maestro-network
+      - artifex-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U maestro"]
+      test: ["CMD-SHELL", "pg_isready -U artifex"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,17 +25,17 @@ services:
   # RabbitMQ Message Broker (for MassTransit event bus)
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: maestro-rabbitmq
+    container_name: artifex-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: maestro
-      RABBITMQ_DEFAULT_PASS: maestro_dev_password
+      RABBITMQ_DEFAULT_USER: artifex
+      RABBITMQ_DEFAULT_PASS: artifex_dev_password
     ports:
       - "5672:5672"   # AMQP port
       - "15672:15672" # Management UI
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
-      - maestro-network
+      - artifex-network
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 10s
@@ -45,7 +45,7 @@ services:
   # Consul Service Discovery
   consul:
     image: consul:latest
-    container_name: maestro-consul
+    container_name: artifex-consul
     command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
     environment:
       CONSUL_BIND_INTERFACE: eth0
@@ -55,7 +55,7 @@ services:
     volumes:
       - consul_data:/consul/data
     networks:
-      - maestro-network
+      - artifex-network
     healthcheck:
       test: ["CMD", "consul", "members"]
       interval: 10s
@@ -66,17 +66,17 @@ services:
   device-management:
     build:
       context: .
-      dockerfile: src/services/device-management/maestro.device-management.presentation/api/Dockerfile
-    container_name: maestro-device-management
+      dockerfile: src/services/device-management/artifex.device-management.ui.web/api/Dockerfile
+    container_name: artifex-device-management
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
-      - ConnectionStrings__DeviceManagementDb=Host=postgres;Database=maestro_device_management;Username=maestro;Password=maestro_dev_password
+      - ConnectionStrings__DeviceManagementDb=Host=postgres;Database=artifex_device_management;Username=artifex;Password=artifex_dev_password
       # MassTransit RabbitMQ configuration
       - RabbitMQ__Host=rabbitmq
       - RabbitMQ__Port=5672
-      - RabbitMQ__Username=maestro
-      - RabbitMQ__Password=maestro_dev_password
+      - RabbitMQ__Username=artifex
+      - RabbitMQ__Password=artifex_dev_password
       - RabbitMQ__VirtualHost=/
       # Consul configuration
       - Consul__Enabled=true
@@ -93,15 +93,15 @@ services:
       consul:
         condition: service_healthy
     networks:
-      - maestro-network
+      - artifex-network
     restart: unless-stopped
 
   # Node Agent 1 (for local site)
   node-agent-1:
     build:
       context: .
-      dockerfile: src/applications/node-agent/maestro.node-agent.presentation/api/Dockerfile
-    container_name: maestro-node-agent-1
+      dockerfile: src/applications/node-agent/artifex.node-agent.ui.web/api/Dockerfile
+    container_name: artifex-node-agent-1
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5003
@@ -121,7 +121,7 @@ services:
     depends_on:
       - device-management
     networks:
-      - maestro-network
+      - artifex-network
     restart: unless-stopped
     # Note: For production, use host network mode to scan local networks
     # network_mode: host
@@ -130,8 +130,8 @@ services:
   node-agent-2:
     build:
       context: .
-      dockerfile: src/applications/node-agent/maestro.node-agent.presentation/api/Dockerfile
-    container_name: maestro-node-agent-2
+      dockerfile: src/applications/node-agent/artifex.node-agent.ui.web/api/Dockerfile
+    container_name: artifex-node-agent-2
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5003
@@ -151,11 +151,11 @@ services:
     depends_on:
       - device-management
     networks:
-      - maestro-network
+      - artifex-network
     restart: unless-stopped
 
 networks:
-  maestro-network:
+  artifex-network:
     driver: bridge
 
 volumes:

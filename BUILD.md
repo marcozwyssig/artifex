@@ -1,6 +1,6 @@
-# Maestro Network Management System - Build Guide
+# Artifex Network Management System - Build Guide
 
-This guide covers building, testing, and running the Maestro Network Management System.
+This guide covers building, testing, and running the Artifex Network Management System.
 
 ## Prerequisites
 
@@ -118,28 +118,28 @@ invoke db-migration-apply --service=device-management
 ## Project Structure
 
 ```
-Maestro/
-├── Maestro.sln                 # Solution file
+Artifex/
+├── Artifex.sln                 # Solution file
 ├── docker-compose.yml          # Docker composition
 ├── tasks.py                    # Build automation
 ├── src/
 │   ├── shared/                 # Shared libraries
-│   │   ├── maestro.shared.domain/
-│   │   ├── maestro.shared.application/
-│   │   ├── maestro.shared.infrastructure/
-│   │   └── maestro.shared.presentation/
+│   │   ├── artifex.shared.domain/
+│   │   ├── artifex.shared.application/
+│   │   ├── artifex.shared.infrastructure/
+│   │   └── artifex.shared.ui.web/
 │   ├── services/               # Microservices
 │   │   └── device-management/
-│   │       ├── maestro.device-management.domain/
-│   │       ├── maestro.device-management.application/
-│   │       ├── maestro.device-management.infrastructure/
-│   │       └── maestro.device-management.presentation/
+│   │       ├── artifex.device-management.domain/
+│   │       ├── artifex.device-management.application/
+│   │       ├── artifex.device-management.infrastructure/
+│   │       └── artifex.device-management.ui.web/
 │   └── applications/           # Standalone applications
 │       └── node-agent/
-│           ├── maestro.node-agent.domain/
-│           ├── maestro.node-agent.application/
-│           ├── maestro.node-agent.infrastructure/
-│           └── maestro.node-agent.presentation/
+│           ├── artifex.node-agent.domain/
+│           ├── artifex.node-agent.application/
+│           ├── artifex.node-agent.infrastructure/
+│           └── artifex.node-agent.ui.web/
 └── scripts/
     └── init-db.sql             # Database initialization
 ```
@@ -160,15 +160,15 @@ docker-compose up -d
 
 ```bash
 # Build release configuration
-dotnet build Maestro.sln -c Release
+dotnet build Artifex.sln -c Release
 
 # Publish Device Management service
-dotnet publish src/services/device-management/maestro.device-management.presentation/api/maestro.device-management.presentation.csproj \
+dotnet publish src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj \
   -c Release \
   -o ./publish/device-management
 
 # Publish Node Agent
-dotnet publish src/applications/node-agent/maestro.node-agent.presentation/api/maestro.node-agent.presentation.csproj \
+dotnet publish src/applications/node-agent/artifex.node-agent.ui.web/api/artifex.node-agent.ui.web.csproj \
   -c Release \
   -o ./publish/node-agent
 ```
@@ -177,7 +177,7 @@ dotnet publish src/applications/node-agent/maestro.node-agent.presentation/api/m
 
 ### Device Management Service
 
-Configuration file: `src/services/device-management/maestro.device-management.presentation/api/appsettings.json`
+Configuration file: `src/services/device-management/artifex.device-management.ui.web/api/appsettings.json`
 
 Key settings:
 - `ConnectionStrings:DeviceManagementDb` - Database connection
@@ -186,7 +186,7 @@ Key settings:
 
 ### Node Agent
 
-Configuration file: `src/applications/node-agent/maestro.node-agent.presentation/api/appsettings.json`
+Configuration file: `src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json`
 
 Key settings:
 - `NodeAgent:NodeId` - Unique agent identifier
@@ -226,14 +226,14 @@ Entity Framework Core migrations are stored in the Infrastructure layer of each 
 Create migration:
 ```bash
 dotnet ef migrations add MigrationName \
-  --project src/services/device-management/maestro.device-management.infrastructure/maestro.device-management.infrastructure.csproj \
-  --startup-project src/services/device-management/maestro.device-management.presentation/api/maestro.device-management.presentation.csproj
+  --project src/services/device-management/artifex.device-management.infrastructure/artifex.device-management.infrastructure.csproj \
+  --startup-project src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj
 ```
 
 Apply migrations:
 ```bash
 dotnet ef database update \
-  --project src/services/device-management/maestro.device-management.presentation/api/maestro.device-management.presentation.csproj
+  --project src/services/device-management/artifex.device-management.ui.web/api/artifex.device-management.ui.web.csproj
 ```
 
 ### Using Docker PostgreSQL
@@ -243,7 +243,7 @@ dotnet ef database update \
 docker-compose up -d postgres
 
 # Connect to database
-docker exec -it maestro-postgres psql -U maestro -d maestro_device_management
+docker exec -it artifex-postgres psql -U artifex -d artifex_device_management
 ```
 
 ## Troubleshooting

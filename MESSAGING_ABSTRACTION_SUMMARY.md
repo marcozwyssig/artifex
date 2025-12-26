@@ -15,7 +15,7 @@ A complete abstraction layer over MassTransit that follows **Dependency Inversio
 
 ### 1. IMessageBus Interface
 
-**Location**: `src/shared/maestro.shared.infrastructure/messaging/IMessageBus.cs`
+**Location**: `src/shared/artifex.shared.infrastructure/messaging/IMessageBus.cs`
 
 ```csharp
 public interface IMessageBus
@@ -37,7 +37,7 @@ public interface IMessageBus
 
 ### 2. IMessageConsumer<TMessage> Interface
 
-**Location**: `src/shared/maestro.shared.infrastructure/messaging/IMessageConsumer.cs`
+**Location**: `src/shared/artifex.shared.infrastructure/messaging/IMessageConsumer.cs`
 
 ```csharp
 public interface IMessageConsumer<in TMessage>
@@ -55,7 +55,7 @@ public interface IMessageConsumer<in TMessage>
 
 ### 1. MassTransitMessageBus (Production)
 
-**Location**: `src/shared/maestro.shared.infrastructure/messaging/MassTransitMessageBus.cs`
+**Location**: `src/shared/artifex.shared.infrastructure/messaging/MassTransitMessageBus.cs`
 
 **Features**:
 - Wraps MassTransit's `IPublishEndpoint`
@@ -69,7 +69,7 @@ public interface IMessageConsumer<in TMessage>
 
 ### 2. InMemoryMessageBus (Development)
 
-**Location**: `src/shared/maestro.shared.infrastructure/messaging/InMemoryMessageBus.cs`
+**Location**: `src/shared/artifex.shared.infrastructure/messaging/InMemoryMessageBus.cs`
 
 **Features**:
 - Synchronous in-process message handling
@@ -85,7 +85,7 @@ public interface IMessageConsumer<in TMessage>
 
 ### Extension Method
 
-**Location**: `src/shared/maestro.shared.infrastructure/messaging/MessagingServiceCollectionExtensions.cs`
+**Location**: `src/shared/artifex.shared.infrastructure/messaging/MessagingServiceCollectionExtensions.cs`
 
 ```csharp
 public static IServiceCollection AddMessaging(
@@ -125,7 +125,7 @@ private readonly IPublishEndpoint _publishEndpoint;  // ❌ Coupled to MassTrans
 private readonly IMessageBus _messageBus;  // ✅ Depends on abstraction
 ```
 
-**File**: `maestro.device-management.api/commands/devices/RegisterDeviceCommandHandler.cs`
+**File**: `artifex.device-management.api/commands/devices/RegisterDeviceCommandHandler.cs`
 
 ---
 
@@ -205,8 +205,8 @@ builder.Services.AddMessaging(builder.Configuration, messaging =>
   "RabbitMQ": {
     "Host": "rabbitmq",
     "Port": 5672,
-    "Username": "maestro",
-    "Password": "maestro_password"
+    "Username": "artifex",
+    "Password": "artifex_password"
   }
 }
 ```
@@ -354,7 +354,7 @@ public async Task RegisterDevice_PublishesEvent()
 ## File Structure
 
 ```
-src/shared/maestro.shared.infrastructure/messaging/
+src/shared/artifex.shared.infrastructure/messaging/
 ├── IMessageBus.cs                              ← Interface
 ├── IMessageConsumer.cs                         ← Consumer interface
 ├── MassTransitMessageBus.cs                    ← Production impl
@@ -363,9 +363,9 @@ src/shared/maestro.shared.infrastructure/messaging/
 └── MassTransitExtensions.cs                    ← Legacy (deprecated)
 
 src/services/device-management/
-├── maestro.device-management.api/
+├── artifex.device-management.api/
 │   └── commands/devices/RegisterDeviceCommandHandler.cs  ← Uses IMessageBus
-└── maestro.device-management.infrastructure/
+└── artifex.device-management.infrastructure/
     └── messaging/consumers/
         ├── DeviceRegisteredConsumer.cs         ← Dual interface
         └── DeviceStatusChangedConsumer.cs      ← Dual interface

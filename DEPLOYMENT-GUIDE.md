@@ -1,8 +1,8 @@
-# Maestro Network Management - Deployment Guide
+# Artifex Network Management - Deployment Guide
 
 ## Overview
 
-Maestro is a distributed network management system with:
+Artifex is a distributed network management system with:
 - **Device Management Service** - Central device inventory and discovery coordination
 - **Node Agent** - Distributed agents for local network discovery
 - **Topology Management** - Network topology mapping
@@ -51,16 +51,16 @@ Maestro is a distributed network management system with:
 
 #### Configuration
 
-Edit `src/services/device-management/maestro.device-management.presentation/api/appsettings.json`:
+Edit `src/services/device-management/artifex.device-management.ui.web/api/appsettings.json`:
 
 ```json
 {
   "ConnectionStrings": {
-    "DeviceManagementDb": "Host=localhost;Database=maestro_device_management;Username=maestro;Password=<STRONG_PASSWORD>"
+    "DeviceManagementDb": "Host=localhost;Database=artifex_device_management;Username=artifex;Password=<STRONG_PASSWORD>"
   },
   "EventBus": {
     "UseRabbitMQ": false,
-    "ExchangeName": "maestro_events"
+    "ExchangeName": "artifex_events"
   }
 }
 ```
@@ -69,17 +69,17 @@ Edit `src/services/device-management/maestro.device-management.presentation/api/
 
 ```bash
 # Create database
-createdb maestro_device_management
+createdb artifex_device_management
 
 # Run migrations (when implemented)
-cd src/services/device-management/maestro.device-management.infrastructure
+cd src/services/device-management/artifex.device-management.infrastructure
 dotnet ef database update
 ```
 
 #### Run the Service
 
 ```bash
-cd src/services/device-management/maestro.device-management.presentation/api
+cd src/services/device-management/artifex.device-management.ui.web/api
 dotnet run
 ```
 
@@ -91,7 +91,7 @@ API Documentation: `http://localhost:5001/swagger`
 
 #### Configuration
 
-Edit `src/applications/node-agent/maestro.node-agent.presentation/api/appsettings.json`:
+Edit `src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json`:
 
 ```json
 {
@@ -130,7 +130,7 @@ Edit `src/applications/node-agent/maestro.node-agent.presentation/api/appsetting
 #### Run the Agent
 
 ```bash
-cd src/applications/node-agent/maestro.node-agent.presentation/api
+cd src/applications/node-agent/artifex.node-agent.ui.web/api
 dotnet run
 ```
 
@@ -149,7 +149,7 @@ For branch offices or remote locations, deploy additional node agents:
   "NodeAgent": {
     "NodeId": "node-agent-branch-001",
     "Location": "Branch Office - Chicago",
-    "DeviceManagementServiceUrl": "https://maestro.company.com"
+    "DeviceManagementServiceUrl": "https://artifex.company.com"
   },
 
   "Discovery": {
@@ -209,7 +209,7 @@ Node agents will automatically discover devices based on configured schedules.
 curl http://localhost:5002/api/discovery/segments
 
 # View last discovery results
-tail -f /var/log/maestro/node-agent.log
+tail -f /var/log/artifex/node-agent.log
 ```
 
 ### 2. Manual Discovery
@@ -299,9 +299,9 @@ services:
   postgres:
     image: postgres:14
     environment:
-      POSTGRES_DB: maestro_device_management
-      POSTGRES_USER: maestro
-      POSTGRES_PASSWORD: maestro_secure_password
+      POSTGRES_DB: artifex_device_management
+      POSTGRES_USER: artifex
+      POSTGRES_PASSWORD: artifex_secure_password
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
@@ -312,7 +312,7 @@ services:
       context: .
       dockerfile: src/services/device-management/Dockerfile
     environment:
-      ConnectionStrings__DeviceManagementDb: "Host=postgres;Database=maestro_device_management;Username=maestro;Password=maestro_secure_password"
+      ConnectionStrings__DeviceManagementDb: "Host=postgres;Database=artifex_device_management;Username=artifex;Password=artifex_secure_password"
     ports:
       - "5001:80"
     depends_on:
@@ -347,8 +347,8 @@ docker-compose up -d
 
 **Use Environment Variables:**
 ```bash
-export MAESTRO_DEFAULT_USERNAME="admin"
-export MAESTRO_DEFAULT_PASSWORD="secure_password"
+export ARTIFEX_DEFAULT_USERNAME="admin"
+export ARTIFEX_DEFAULT_PASSWORD="secure_password"
 ```
 
 **Or use secrets management:**
@@ -389,10 +389,10 @@ curl http://localhost:5002/health
 **View Application Logs:**
 ```bash
 # Device Management
-tail -f /var/log/maestro/device-management.log
+tail -f /var/log/artifex/device-management.log
 
 # Node Agent
-tail -f /var/log/maestro/node-agent.log
+tail -f /var/log/artifex/node-agent.log
 ```
 
 **Enable Debug Logging:**
@@ -403,7 +403,7 @@ Edit `appsettings.json`:
   "Logging": {
     "LogLevel": {
       "Default": "Debug",
-      "Maestro": "Trace"
+      "Artifex": "Trace"
     }
   }
 }
@@ -465,15 +465,15 @@ For larger networks, break into smaller subnets:
 ### Database Backup
 
 ```bash
-pg_dump maestro_device_management > backup_$(date +%Y%m%d).sql
+pg_dump artifex_device_management > backup_$(date +%Y%m%d).sql
 ```
 
 ### Configuration Backup
 
 ```bash
-tar -czf maestro_config_$(date +%Y%m%d).tar.gz \
-  src/services/device-management/maestro.device-management.presentation/api/appsettings.json \
-  src/applications/node-agent/maestro.node-agent.presentation/api/appsettings.json
+tar -czf artifex_config_$(date +%Y%m%d).tar.gz \
+  src/services/device-management/artifex.device-management.ui.web/api/appsettings.json \
+  src/applications/node-agent/artifex.node-agent.ui.web/api/appsettings.json
 ```
 
 ## Next Steps
@@ -488,5 +488,5 @@ tar -czf maestro_config_$(date +%Y%m%d).tar.gz \
 ## Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/your-org/maestro/issues
-- Documentation: https://docs.maestro.company.com
+- GitHub Issues: https://github.com/your-org/artifex/issues
+- Documentation: https://docs.artifex.company.com

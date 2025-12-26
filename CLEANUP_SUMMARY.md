@@ -1,4 +1,4 @@
-# Maestro - Codebase Cleanup Summary
+# Artifex - Codebase Cleanup Summary
 
 **Date**: 2025-12-22
 **Status**: ✅ **COMPLETE - Clean State Achieved**
@@ -17,16 +17,16 @@ Performed comprehensive cleanup to remove all obsolete event bus implementation 
 
 | File | Reason for Deletion |
 |------|---------------------|
-| `src/shared/maestro.shared.infrastructure/eventbus/IEventBus.cs` | Replaced by `IMessageBus` |
-| `src/shared/maestro.shared.infrastructure/eventbus/InMemoryEventBus.cs` | Replaced by `InMemoryMessageBus` |
-| `src/shared/maestro.shared.infrastructure/eventbus/RabbitMQEventBus.cs` | Replaced by `MassTransitMessageBus` |
-| **Directory:** `src/shared/maestro.shared.infrastructure/eventbus/` | **Entire directory removed** |
+| `src/shared/artifex.shared.infrastructure/eventbus/IEventBus.cs` | Replaced by `IMessageBus` |
+| `src/shared/artifex.shared.infrastructure/eventbus/InMemoryEventBus.cs` | Replaced by `InMemoryMessageBus` |
+| `src/shared/artifex.shared.infrastructure/eventbus/RabbitMQEventBus.cs` | Replaced by `MassTransitMessageBus` |
+| **Directory:** `src/shared/artifex.shared.infrastructure/eventbus/` | **Entire directory removed** |
 
 ### 2. Old Configuration Extensions
 
 | File | Reason for Deletion |
 |------|---------------------|
-| `src/shared/maestro.shared.infrastructure/configuration/ServiceCollectionExtensions.cs` | Methods replaced by `MessagingServiceCollectionExtensions` |
+| `src/shared/artifex.shared.infrastructure/configuration/ServiceCollectionExtensions.cs` | Methods replaced by `MessagingServiceCollectionExtensions` |
 
 **Methods that were deprecated:**
 - `AddInMemoryEventBus()` → Now `AddInMemoryMessaging()`
@@ -37,17 +37,17 @@ Performed comprehensive cleanup to remove all obsolete event bus implementation 
 
 | File | Reason for Deletion |
 |------|---------------------|
-| `src/shared/maestro.shared.infrastructure/messaging/MassTransitExtensions.cs` | Functionality integrated into `MessagingServiceCollectionExtensions` |
+| `src/shared/artifex.shared.infrastructure/messaging/MassTransitExtensions.cs` | Functionality integrated into `MessagingServiceCollectionExtensions` |
 
 **Methods that were deprecated:**
-- `AddMaestroMassTransit()` → Now `AddMassTransitMessaging()`
-- `AddMaestroMassTransitInMemory()` → Now `AddInMemoryMessaging()`
+- `AddArtifexMassTransit()` → Now `AddMassTransitMessaging()`
+- `AddArtifexMassTransitInMemory()` → Now `AddInMemoryMessaging()`
 
 ### 4. Old Test Files
 
 | File | Reason for Deletion |
 |------|---------------------|
-| `src/shared/maestro.shared.infrastructure.tests/InMemoryEventBusTests.cs` | Tests for deprecated InMemoryEventBus |
+| `src/shared/artifex.shared.infrastructure.tests/InMemoryEventBusTests.cs` | Tests for deprecated InMemoryEventBus |
 
 **Note**: New tests should target `InMemoryMessageBus` instead.
 
@@ -69,12 +69,12 @@ All command handlers updated from `IEventBus` to `IMessageBus`:
 **Changes Made:**
 ```csharp
 // Before
-using Maestro.Shared.Infrastructure.EventBus;
+using Artifex.Shared.Infrastructure.EventBus;
 private readonly IEventBus _eventBus;
 await _eventBus.PublishAsync(@event, ct);
 
 // After
-using Maestro.Shared.Infrastructure.Messaging;
+using Artifex.Shared.Infrastructure.Messaging;
 private readonly IMessageBus _messageBus;
 await _messageBus.PublishAsync(@event, ct);
 ```
@@ -116,7 +116,7 @@ All references successfully migrated to `IMessageBus`.
 ### Messaging Infrastructure (New)
 
 ```
-src/shared/maestro.shared.infrastructure/messaging/
+src/shared/artifex.shared.infrastructure/messaging/
 ├── IMessageBus.cs                              ← Abstraction
 ├── IMessageConsumer.cs                         ← Consumer interface
 ├── MassTransitMessageBus.cs                    ← Production (RabbitMQ)
@@ -127,7 +127,7 @@ src/shared/maestro.shared.infrastructure/messaging/
 ### No More Old Event Bus
 
 ```
-src/shared/maestro.shared.infrastructure/
+src/shared/artifex.shared.infrastructure/
 ├── messaging/          ← NEW (abstracted)
 ├── eventbus/           ← DELETED ✅
 └── configuration/
@@ -196,11 +196,11 @@ For future developers, here's what changed:
 
 ```csharp
 // Use this
-using Maestro.Shared.Infrastructure.Messaging;
+using Artifex.Shared.Infrastructure.Messaging;
 private readonly IMessageBus _messageBus;
 
 // NOT this (no longer exists)
-using Maestro.Shared.Infrastructure.EventBus;
+using Artifex.Shared.Infrastructure.EventBus;
 private readonly IEventBus _eventBus;
 ```
 
@@ -264,7 +264,7 @@ Both consumers implement dual interfaces:
 ### Build Test
 
 ```bash
-cd /Users/marcozwyssig/Documents/Maestro
+cd /Users/marcozwyssig/Documents/Artifex
 dotnet build
 ```
 
@@ -281,7 +281,7 @@ grep -r "IEventBus\|Infrastructure\.EventBus" src/
 ### Run Test
 
 ```bash
-cd src/services/device-management/maestro.device-management.presentation/api
+cd src/services/device-management/artifex.device-management.ui.web/api
 dotnet run --environment Development
 ```
 

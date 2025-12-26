@@ -1,4 +1,4 @@
-# Maestro Documentation Index
+# Artifex Documentation Index
 
 **Last Updated:** 2025-12-20
 **Status:** Minimal and Current

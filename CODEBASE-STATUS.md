@@ -1,4 +1,4 @@
-# Maestro Codebase - Current Status
+# Artifex Codebase - Current Status
 
 **Last Updated:** 2025-12-20 (Infrastructure Alignment Complete)
 **Architecture:** Proper Layered DDD with Database in Infrastructure
@@ -12,7 +12,7 @@ New: src/shared/
 ```
 
 **Files Updated:**
-- ✅ maestro.shared.domain/
+- ✅ artifex.shared.domain/
   - Entity.cs
   - AggregateRoot.cs
   - DomainEvent.cs
@@ -22,30 +22,30 @@ New: src/shared/
   - Result.cs
   - Exceptions/DomainException.cs
 
-- ✅ maestro.shared.infrastructure/
+- ✅ artifex.shared.infrastructure/
   - IEventBus.cs
 
-All namespaces updated from `Maestro.BuildingBlocks.*` to `Maestro.Shared.*`
+All namespaces updated from `Artifex.BuildingBlocks.*` to `Artifex.Shared.*`
 
 ### 2. Created Applications Directory ✅
 
 ```
 src/applications/  (✅ NEW)
 ├── api-gateway/
-│   └── maestro.api-gateway/
+│   └── artifex.api-gateway/
 ├── node-agent/
-│   ├── maestro.node-agent.domain/
-│   ├── maestro.node-agent.application/
-│   ├── maestro.node-agent.infrastructure/
+│   ├── artifex.node-agent.domain/
+│   ├── artifex.node-agent.application/
+│   ├── artifex.node-agent.infrastructure/
 │   │   ├── communication/
 │   │   ├── sync/
 │   │   └── persistence/
-│   ├── maestro.node-agent.presentation/
+│   ├── artifex.node-agent.ui.web/
 │   │   └── api/
-│   ├── maestro.node-agent.network-monitor/
-│   └── maestro.node-agent.system-monitor/
+│   ├── artifex.node-agent.network-monitor/
+│   └── artifex.node-agent.system-monitor/
 └── web-ui/
-    └── maestro.web.ui/
+    └── artifex.web.ui.web/
 ```
 
 **What Changed:**
@@ -57,8 +57,8 @@ src/applications/  (✅ NEW)
 ### 3. Reorganized All Services ✅
 
 **For All Services:**
-- ✅ Moved `maestro.{service}.ansible/*` → `maestro.{service}.infrastructure/automation/`
-- ✅ Removed empty `maestro.{service}.api/` directories (now in presentation layer)
+- ✅ Moved `artifex.{service}.ansible/*` → `artifex.{service}.infrastructure/automation/`
+- ✅ Removed empty `artifex.{service}.api/` directories (now in ui layer)
 - ✅ Device Management: Moved `device-adapter` → `infrastructure/communication/python-adapter/`
 
 **Services Updated:**
@@ -82,14 +82,14 @@ src/
 │
 ├── services/                  # ✅ Bounded contexts (DDD)
 │   ├── device-management/
-│   │   ├── maestro.device-management.domain/
-│   │   ├── maestro.device-management.application/
+│   │   ├── artifex.device-management.domain/
+│   │   ├── artifex.device-management.application/
 │   │   │   ├── commands/
 │   │   │   ├── queries/
 │   │   │   ├── jobs/
 │   │   │   ├── dtos/
 │   │   │   └── services/
-│   │   ├── maestro.device-management.infrastructure/
+│   │   ├── artifex.device-management.infrastructure/
 │   │   │   ├── persistence/
 │   │   │   │   ├── repositories/
 │   │   │   │   └── configurations/
@@ -109,7 +109,7 @@ src/
 │   │   │   ├── database/                 # ✅ NEW: Moved into infrastructure
 │   │   │   │   └── migrations/
 │   │   │   └── external-services/
-│   │   └── maestro.device-management.presentation/
+│   │   └── artifex.device-management.ui.web/
 │   │       └── api/
 │   │           ├── controllers/
 │   │           └── middleware/
@@ -123,10 +123,10 @@ src/
 │   └── event-store/
 │
 └── shared/                    # ✅ Cross-cutting concerns
-    ├── maestro.shared.domain/
-    ├── maestro.shared.application/
-    ├── maestro.shared.infrastructure/
-    └── maestro.shared.presentation/
+    ├── artifex.shared.domain/
+    ├── artifex.shared.application/
+    ├── artifex.shared.infrastructure/
+    └── artifex.shared.ui.web/
 ```
 
 ## 📊 Progress Summary
@@ -141,7 +141,7 @@ src/
 | **All Services Structure** | ✅ Complete | 100% |
 | **Ansible → Infrastructure** | ✅ Complete | 100% |
 | **Device Adapter → Communication** | ✅ Complete | 100% |
-| **API → Presentation** | ✅ Complete | 100% |
+| **API → Ui** | ✅ Complete | 100% |
 | **Database → Infrastructure** | ✅ Complete | 100% |
 
 **Overall Structure: ✅ 100% Complete (Including Database Alignment)**
@@ -150,12 +150,12 @@ src/
 
 1. ✅ **Applications vs Services** - Clear separation between deployable apps and domain services
 2. ✅ **Shared renamed** - Clear "shared" naming for cross-cutting concerns
-3. ✅ **Layers defined** - Domain, Application, Infrastructure, Presentation
+3. ✅ **Layers defined** - Domain, Application, Infrastructure, Ui
 4. ✅ **Communication in Infrastructure** - SNMP/SSH/HTTP in infrastructure/communication
 5. ✅ **Database in Infrastructure** - Persistence properly separated
 6. ✅ **Automation in Infrastructure** - Ansible in infrastructure/automation
-7. ✅ **API in Presentation** - Controllers in presentation layer
-8. ✅ **Namespaces updated** - All using Maestro.Shared.*
+7. ✅ **API in Ui** - Controllers in ui layer
+8. ✅ **Namespaces updated** - All using Artifex.Shared.*
 
 ## 📝 Next Steps (Implementation)
 
@@ -174,7 +174,7 @@ The structure is now complete! Next steps are to implement the actual code:
    - Python adapter services (FastAPI)
    - Ansible runners
 
-3. **Implement Presentation Layer** for each service
+3. **Implement Ui Layer** for each service
    - API Controllers
    - Program.cs / Startup.cs
    - Middleware
@@ -195,13 +195,13 @@ The structure is now complete! Next steps are to implement the actual code:
   - communication/ (SNMP/SSH/HTTP/Python)
   - automation/ (Ansible)
   - external-services/
-- ✅ **Presentation Layer Separated** - API clearly in presentation layer
+- ✅ **Ui Layer Separated** - API clearly in ui layer
 - ✅ **Shared Layer Complete** - Base domain classes ready
 - ✅ **Ready for Implementation** - Clean foundation for building features
 
 ---
 
-**The Maestro architecture is now fully structured according to:**
+**The Artifex architecture is now fully structured according to:**
 - ✅ Domain-Driven Design (DDD) principles
 - ✅ Layered architecture pattern
 - ✅ CQRS pattern (prepared)
